@@ -1,17 +1,36 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import useModule from "../hooks/useModule";
 
 const Index = () => {
   const module = useModule();
-  console.log(module);
+  const loadingRef = useRef(false);
+
+  const [[width, height], setDimensions] = useState([
+    typeof window === "undefined" ? 0 : window.innerWidth,
+    typeof window === "undefined" ? 0 : window.innerHeight,
+  ]);
+  useEffect(() => {
+    const handler = () => {
+      console.log("handler!");
+      setDimensions([window.innerWidth, window.innerHeight]);
+    };
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  }, [setDimensions]);
 
   const [imgSrc, setImgSrc] = useState<string | undefined>();
-
   const generateImage = useCallback(() => {
-    const bytes = module.mandelbrot(800, 600, 1000);
+    document.body.style.cursor = "wait";
+    if (loadingRef.current || width === 0 || height === 0) {
+      return;
+    }
+    loadingRef.current = true;
+    const bytes = module.mandelbrot(width, height, 100);
     const blob = new Blob([bytes], { type: "image/png" });
     setImgSrc(URL.createObjectURL(blob));
-  }, [setImgSrc, module]);
+    document.body.style.removeProperty("cursor");
+    loadingRef.current = false;
+  }, [setImgSrc, module, width, height]);
 
   useEffect(() => {
     if (module == null) {
@@ -24,7 +43,7 @@ const Index = () => {
     return null;
   }
 
-  return <img src={imgSrc} width={800} height={600} alt="mandelbrot" />;
+  return <img src={imgSrc} width={width} height={height} alt="mandelbrot" />;
 };
 
 export default Index;
