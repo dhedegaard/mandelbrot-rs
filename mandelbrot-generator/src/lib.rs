@@ -12,9 +12,7 @@ use image::{png::PngEncoder, ImageEncoder, Rgb, RgbImage};
 use js_sys::Uint8Array;
 
 #[wasm_bindgen]
-extern "C" {
-    // fn alert(s: &str);
-}
+extern "C" {}
 
 #[wasm_bindgen]
 pub fn mandelbrot(width: u32, height: u32, max_iterations: usize) -> Uint8Array {
