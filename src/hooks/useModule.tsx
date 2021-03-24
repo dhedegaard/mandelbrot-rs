@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 
 const modulePromise = import(
-  "/home/dennis/src/mandelbrot-rs/mandelbrot-generator/pkg/mandelbrot_generator"
+  "../../mandelbrot-generator/pkg/mandelbrot_generator"
 );
-type ModuleType = typeof import("/home/dennis/src/mandelbrot-rs/mandelbrot-generator/pkg/mandelbrot_generator");
+type ModuleType = typeof import("../../mandelbrot-generator/pkg/mandelbrot_generator");
 
 const useModule = () => {
   const [module, setModule] = useState<ModuleType | undefined>();
