@@ -26,21 +26,25 @@ pub fn mandelbrot(width: u32, height: u32, max_iterations: usize) -> Uint8Array 
             let x0 = (px as f64) * width_ratio - 2.5f64;
             let mut x = 0f64;
             let mut y = 0f64;
-            let mut iteration = 0;
-            while x * x + y * y <= (1 << 16) as f64 && iteration < max_iterations {
+            let mut iteration = 0f64;
+            while x * x + y * y <= (1 << 16) as f64 && iteration < max_iterations as f64 {
                 let xtemp = x * x - y * y + x0;
                 y = 2f64 * x * y + y0;
                 x = xtemp;
-                iteration += 1;
+                iteration += 1f64;
             }
-            if iteration < max_iterations {
-                let log_zn = (x * x + y * y).log2() / 2f64;
-                let nu = f64::log2(log_zn / f64::log2(2f64)) / f64::log2(2f64);
-                iteration = iteration + 1 - nu as usize;
+            // If we exceeded the iterations, paint it white.
+            if iteration >= max_iterations as f64 {
+                image.put_pixel(px, py, Rgb([255, 255, 255]));
+                continue;
             }
-            let color1 = f64::floor(iteration as f64) / (max_iterations as f64) * 255f64;
-            let color2 = f64::floor(1f64 + iteration as f64) / (max_iterations as f64) * 255f64;
-            let color = (0.5 * color1 + 0.5 * color2) as u8;
+            let log_zn = (x * x + y * y).log10() / 2f64;
+            let nu = f64::log10(log_zn / f64::log10(2f64)) / f64::log10(2f64);
+            iteration = iteration + 1f64 - nu;
+            let color1 = iteration / (max_iterations as f64) * 255f64;
+            let color2 = 1f64 + iteration / (max_iterations as f64) * 255f64;
+            let t = iteration % 1f64;
+            let color = f64::round(t * color1 + (1f64 - t) * color2) as u8;
             image.put_pixel(px, py, Rgb([color, color, 255]));
         }
     }
