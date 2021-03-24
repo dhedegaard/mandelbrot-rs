@@ -1,5 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import styled from "styled-components";
 import useModule from "../hooks/useModule";
+
+const Img = styled.img`
+  pointer-events: none;
+  user-select: none;
+  object-fit: fill;
+  image-rendering: optimizeQuality;
+`;
 
 const Index = () => {
   const module = useModule();
@@ -11,7 +19,6 @@ const Index = () => {
   ]);
   useEffect(() => {
     const handler = () => {
-      console.log("handler!");
       setDimensions([window.innerWidth, window.innerHeight]);
     };
     window.addEventListener("resize", handler);
@@ -43,7 +50,15 @@ const Index = () => {
     return null;
   }
 
-  return <img src={imgSrc} width={width} height={height} alt="mandelbrot" />;
+  return (
+    <Img
+      src={imgSrc}
+      width={width}
+      height={height}
+      onDragStart={() => false}
+      alt="mandelbrot"
+    />
+  );
 };
 
 export default Index;

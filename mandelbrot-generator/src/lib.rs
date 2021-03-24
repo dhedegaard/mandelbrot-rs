@@ -33,7 +33,14 @@ pub fn mandelbrot(width: u32, height: u32, max_iterations: usize) -> Uint8Array 
                 x = xtemp;
                 iteration += 1;
             }
-            let color = ((iteration as f64) / (max_iterations as f64) * 255f64) as u8;
+            if iteration < max_iterations {
+                let log_zn = (x * x + y * y).log2() / 2f64;
+                let nu = f64::log2(log_zn / f64::log2(2f64)) / f64::log2(2f64);
+                iteration = iteration + 1 - nu as usize;
+            }
+            let color1 = f64::floor(iteration as f64) / (max_iterations as f64) * 255f64;
+            let color2 = f64::floor(1f64 + iteration as f64) / (max_iterations as f64) * 255f64;
+            let color = (0.5 * color1 + 0.5 * color2) as u8;
             image.put_pixel(px, py, Rgb([color, color, 255]));
         }
     }
