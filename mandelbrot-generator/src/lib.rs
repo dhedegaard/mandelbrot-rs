@@ -8,7 +8,8 @@ use wasm_bindgen::prelude::*;
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
-use image::{Rgb, RgbImage};
+use image::{png::PngEncoder, ImageEncoder, Rgb, RgbImage};
+use js_sys::Uint8Array;
 
 #[wasm_bindgen]
 extern "C" {
@@ -16,10 +17,9 @@ extern "C" {
 }
 
 #[wasm_bindgen]
-pub fn mandelbrot(width: u32, height: u32, max_iterations: usize) -> String {
+pub fn mandelbrot(width: u32, height: u32, max_iterations: usize) -> Uint8Array {
     let width_ratio = 3.5f64 / width as f64;
     let height_ratio = 2f64 / height as f64;
-    let mut result = String::new();
     let mut image = RgbImage::new(width as u32, height as u32);
 
     for py in 0..height {
@@ -44,4 +44,10 @@ pub fn mandelbrot(width: u32, height: u32, max_iterations: usize) -> String {
             image.put_pixel(px, py, Rgb([color, color, 255]));
         }
     }
+
+    let mut vec = vec![];
+    let encoder = PngEncoder::new(&mut vec);
+    let res = encoder.write_image(&image, width, height, image::ColorType::Rgb8);
+    res.expect("Error incoding image");
+    unsafe { Uint8Array::view(&vec) }
 }
