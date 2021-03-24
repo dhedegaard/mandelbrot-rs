@@ -1,0 +1,22 @@
+<!DOCTYPE html />
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>mandelbrot-rs</title>
+    <style>
+      body {
+        max-width: 1200px;
+        margin: 12px auto 0;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Mandelbrot?</h1>
+    <script type="module" defer>
+      import init from "./mandelbrot-generator/pkg/mandelbrot_generator";
+      const module = await init();
+      console.log(module.greet());
+    </script>
+  </body>
+</html>
