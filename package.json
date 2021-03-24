@@ -4,9 +4,12 @@
   "description": "",
   "main": "src/pages/index.ts",
   "scripts": {
+    "build:rust": "sh -c 'cd mandelbrot-generator && wasm-pack build'",
+    "build:next": "next build && next export",
+    "build": "yarn build:rust && yarn build:next",
     "dev": "next dev",
-    "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "deploy": "yarn build && netlify deploy --dir out --prod"
   },
   "repository": {
     "type": "git",
