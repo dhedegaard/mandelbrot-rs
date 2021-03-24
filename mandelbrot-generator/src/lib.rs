@@ -30,16 +30,11 @@ pub fn mandelbrot(width: u32, height: u32, max_iterations: usize) -> Uint8Array 
             let mut y = 0f64;
             let mut iteration = 0;
             while x * x + y * y <= (1 << 16) as f64 && iteration < max_iterations {
-                let xtemp = x * x + y * y + x0;
+                let xtemp = x * x - y * y + x0;
                 y = 2f64 * x * y + y0;
                 x = xtemp;
                 iteration += 1;
             }
-            // TODO: Wat do?
-            // if iteration < max_iterations {
-            //     let log_zn = f64::log2(x * x + y * y) / 2f64;
-            //     let nu = f64::log2(log_zn / )
-            // }
             let color = ((iteration as f64) / (max_iterations as f64) * 255f64) as u8;
             image.put_pixel(px, py, Rgb([color, color, 255]));
         }
