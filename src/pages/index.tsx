@@ -1,10 +1,14 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  WheelEventHandler,
+} from "react";
 import styled from "styled-components";
 import useModule from "../hooks/useModule";
 
 const Img = styled.img`
-  pointer-events: none;
-  user-select: none;
   object-fit: fill;
   image-rendering: optimizeQuality;
 `;

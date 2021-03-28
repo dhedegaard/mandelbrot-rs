@@ -7,9 +7,10 @@
     "build:rust": "sh -c 'cd mandelbrot-generator && wasm-pack build'",
     "build:next": "next build && next export",
     "build": "yarn build:rust && yarn build:next",
+    "clean": "rm -rf .next",
     "dev": "next dev",
     "start": "next start",
-    "deploy": "yarn build && netlify deploy --dir out --prod"
+    "deploy": "yarn clean && yarn build && netlify deploy --dir out --prod"
   },
   "repository": {
     "type": "git",
