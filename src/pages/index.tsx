@@ -49,7 +49,7 @@ const Index = () => {
     loadingRef.current = true;
     const before = performance.now();
     const bytes = module.mandelbrot(width, height, iterations);
-    const blob = new Blob([bytes], { type: "image/png" });
+    const blob = new Blob([bytes], { type: "image/bmp" });
     const imageObj = URL.createObjectURL(blob);
     setImgSrc(imageObj);
     if (imageObjRef.current != null) {
@@ -69,11 +69,11 @@ const Index = () => {
   }, [module, width, height, iterations]);
 
   const decrementIterations = useCallback(
-    () => setIterations((old) => old - 1),
+    () => setIterations((old) => Math.max(0, old < 10 ? old - 1 : old - 10)),
     []
   );
   const incrementIterations = useCallback(
-    () => setIterations((old) => old + 1),
+    () => setIterations((old) => (old < 10 ? old + 1 : old + 10)),
     []
   );
 

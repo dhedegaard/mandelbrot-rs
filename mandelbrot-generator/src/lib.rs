@@ -8,11 +8,13 @@ use wasm_bindgen::prelude::*;
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
-use image::{png::PngEncoder, ImageEncoder, Rgb, RgbImage};
+use image::{bmp::BmpEncoder, ImageEncoder, Rgb, RgbImage};
 use js_sys::Uint8Array;
 
 #[wasm_bindgen]
 extern "C" {}
+
+const WHITE: Rgb<u8> = Rgb([255, 255, 255]);
 
 #[wasm_bindgen]
 pub fn mandelbrot(width: f32, height: f32, max_iterations: usize) -> Uint8Array {
@@ -46,7 +48,7 @@ pub fn mandelbrot(width: f32, height: f32, max_iterations: usize) -> Uint8Array 
             }
             // If we exceeded the iterations, paint it white.
             if iteration >= max_iterations as f32 {
-                image.put_pixel(px, py, Rgb([255, 255, 255]));
+                image.put_pixel(px, py, WHITE);
                 continue;
             }
             let log_zn = (x * x + y * y).log10() / 2f32;
@@ -61,7 +63,7 @@ pub fn mandelbrot(width: f32, height: f32, max_iterations: usize) -> Uint8Array 
     }
 
     let mut vec = vec![];
-    let encoder = PngEncoder::new(&mut vec);
+    let encoder = BmpEncoder::new(&mut vec);
     let res = encoder.write_image(&image, width as u32, height as u32, image::ColorType::Rgb8);
     res.expect("Error incoding image");
     unsafe { Uint8Array::view(&vec) }
