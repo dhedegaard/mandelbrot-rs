@@ -9,10 +9,24 @@ const Img = styled.img`
   image-rendering: optimizeQuality;
 `;
 
+const Info = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(255, 255, 255, 0.5);
+  border: 1px solid #fff;
+  padding: 2px;
+  font-size: small;
+  border-radius: 3px;
+  color: #fff;
+`;
+
 const Index = () => {
   const module = useModule();
   const loadingRef = useRef(false);
   const imageObjRef = useRef<string>();
+  const [generationDuration, setGenerationDuration] = useState(0);
+  const [iterations, setIterations] = useState(50);
 
   const [[width, height], setDimensions] = useState([
     typeof window === "undefined" ? 0 : window.innerWidth,
@@ -33,9 +47,8 @@ const Index = () => {
       return;
     }
     loadingRef.current = true;
-    console.time("GEN");
-    const bytes = module.mandelbrot(width, height, 100);
-    console.timeEnd("GEN");
+    const before = performance.now();
+    const bytes = module.mandelbrot(width, height, iterations);
     const blob = new Blob([bytes], { type: "image/png" });
     const imageObj = URL.createObjectURL(blob);
     setImgSrc(imageObj);
@@ -43,29 +56,52 @@ const Index = () => {
       URL.revokeObjectURL(imageObjRef.current);
     }
     imageObjRef.current = imageObj;
+    setGenerationDuration(performance.now() - before);
     document.body.style.removeProperty("cursor");
     loadingRef.current = false;
-  }, [setImgSrc, module, width, height]);
+  }, [setImgSrc, module, width, height, iterations]);
 
   useEffect(() => {
     if (module == null) {
       return;
     }
     generateImage();
-  }, [module, width, height]);
+  }, [module, width, height, iterations]);
+
+  const decrementIterations = useCallback(
+    () => setIterations((old) => old - 1),
+    []
+  );
+  const incrementIterations = useCallback(
+    () => setIterations((old) => old + 1),
+    []
+  );
 
   if (imgSrc == null) {
     return null;
   }
 
   return (
-    <Img
-      src={imgSrc}
-      width={width}
-      height={height}
-      onDragStart={() => false}
-      alt="mandelbrot"
-    />
+    <>
+      <Img
+        src={imgSrc}
+        width={width}
+        height={height}
+        onDragStart={() => false}
+        alt="mandelbrot"
+      />
+      <Info>
+        Last render: <b>{generationDuration.toPrecision(6)} ms</b>
+        <br />
+        Iterations: <b>{iterations}</b>
+        <button type="button" onClick={decrementIterations}>
+          -
+        </button>
+        <button type="button" onClick={incrementIterations}>
+          +
+        </button>
+      </Info>
+    </>
   );
 };
 
