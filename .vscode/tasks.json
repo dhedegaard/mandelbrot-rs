@@ -1,0 +1,16 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "shell",
+      "command": "wasm-pack",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "args": ["build", "--release"],
+      "label": "rust: cargo clean",
+      "options": { "cwd": "${workspaceFolder}/mandelbrot-generator" }
+    }
+  ]
+}

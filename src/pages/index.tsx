@@ -20,7 +20,6 @@ const Index = () => {
   ]);
   useEffect(() => {
     const handler = () => {
-      console.log("resize event!", window.innerWidth, window.innerHeight);
       setDimensions([window.innerWidth, window.innerHeight]);
     };
     window.addEventListener("resize", handler, { passive: true });
@@ -30,7 +29,6 @@ const Index = () => {
   const [imgSrc, setImgSrc] = useState<string | undefined>();
   const generateImage = useCallback(() => {
     document.body.style.cursor = "wait";
-    console.log({ loadingRef, width, height });
     if (loadingRef.current || width === 0 || height === 0) {
       return;
     }
@@ -40,7 +38,6 @@ const Index = () => {
     console.timeEnd("GEN");
     const blob = new Blob([bytes], { type: "image/png" });
     const imageObj = URL.createObjectURL(blob);
-    console.log("new image obj:", imageObj);
     setImgSrc(imageObj);
     if (imageObjRef.current != null) {
       URL.revokeObjectURL(imageObjRef.current);
