@@ -15,14 +15,27 @@ use js_sys::Uint8Array;
 extern "C" {}
 
 #[wasm_bindgen]
-pub fn mandelbrot(width: u32, height: u32, max_iterations: usize) -> Uint8Array {
-    let width_ratio = 3.5f64 / width as f64;
-    let height_ratio = 2f64 / height as f64;
+pub fn mandelbrot(width: f64, height: f64, max_iterations: usize) -> Uint8Array {
+    let ratio: f64 = (width / height).into();
+    let relative_width: f64 = if ratio > 1.0 {
+        width / ratio
+    } else {
+        width as f64
+    };
+    let relative_height: f64 = if ratio < 1.0 {
+        height * ratio
+    } else {
+        height as f64
+    };
+    // let relative_width = width;
+    // let relative_height = height;
+    let width_ratio = 3.5f64 / relative_width as f64;
+    let height_ratio = 2f64 / relative_height as f64;
     let mut image = RgbImage::new(width as u32, height as u32);
 
-    for py in 0..height {
+    for py in 0..height as u32 {
         let y0 = (py as f64) * height_ratio - 1f64;
-        for px in 0..width {
+        for px in 0..width as u32 {
             let x0 = (px as f64) * width_ratio - 2.5f64;
             let mut x = 0f64;
             let mut y = 0f64;
@@ -51,7 +64,7 @@ pub fn mandelbrot(width: u32, height: u32, max_iterations: usize) -> Uint8Array 
 
     let mut vec = vec![];
     let encoder = PngEncoder::new(&mut vec);
-    let res = encoder.write_image(&image, width, height, image::ColorType::Rgb8);
+    let res = encoder.write_image(&image, width as u32, height as u32, image::ColorType::Rgb8);
     res.expect("Error incoding image");
     unsafe { Uint8Array::view(&vec) }
 }
