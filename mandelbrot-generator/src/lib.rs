@@ -14,21 +14,23 @@ use js_sys::Uint8Array;
 #[wasm_bindgen]
 extern "C" {}
 
+const WIDTH_HEIGHT_RATIO: f32 = 1.2;
+
 #[wasm_bindgen]
 pub fn mandelbrot(width: f32, height: f32, max_iterations: usize) -> Uint8Array {
     let ratio: f32 = (width / height).into();
-    let relative_width: f32 = if ratio > 1.0 {
+    let relative_width: f32 = if ratio > WIDTH_HEIGHT_RATIO {
         width / ratio
     } else {
         width as f32
     };
-    let relative_height: f32 = if ratio < 1.0 {
+    let relative_height: f32 = if ratio < WIDTH_HEIGHT_RATIO {
         height * ratio
     } else {
         height as f32
     };
-    let width_ratio = 3.5f32 / relative_width as f32;
-    let height_ratio = 2f32 / relative_height as f32;
+    let width_ratio = 3.5f32 / relative_width;
+    let height_ratio = 2f32 / relative_height;
     let mut bmp = Image::new(width as u32, height as u32);
 
     let max_iterations_f = max_iterations as f32;

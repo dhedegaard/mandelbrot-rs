@@ -1,3 +1,4 @@
+import { AppProps } from "next/dist/shared/lib/router/router";
 import Head from "next/head";
 import { createGlobalStyle } from "styled-components";
 
@@ -9,7 +10,7 @@ body {
 }
 `;
 
-const MyApp = ({ Component, pageProps }) => {
+const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
     <>
       <GlobalStyle />

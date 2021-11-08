@@ -1,10 +1,4 @@
-import {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  WheelEventHandler,
-} from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import useModule from "../hooks/useModule";
 
@@ -50,6 +44,10 @@ const Index = () => {
     if (loadingRef.current || width === 0 || height === 0) {
       return;
     }
+    if (module == null) {
+      console.info("module is not defined");
+      return;
+    }
     loadingRef.current = true;
     const before = performance.now();
     const bytes = module.mandelbrot(width, height, iterations);
@@ -87,13 +85,7 @@ const Index = () => {
 
   return (
     <>
-      <Img
-        src={imgSrc}
-        width={width}
-        height={height}
-        onDragStart={() => false}
-        alt="mandelbrot"
-      />
+      <Img src={imgSrc} width={width} height={height} alt="mandelbrot" />
       <Info>
         Last render: <b>{generationDuration.toPrecision(6)} ms</b>
         <br />
