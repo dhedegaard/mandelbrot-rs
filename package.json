@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/pages/index.ts",
   "scripts": {
-    "build:rust": "sh -c 'cd mandelbrot-generator && wasm-pack build'",
+    "build:rust": "sh -c 'cd mandelbrot-generator && wasm-pack build --release'",
     "build:next": "next build && next export",
     "build": "yarn build:rust && yarn build:next",
     "clean": "rm -rf .next",

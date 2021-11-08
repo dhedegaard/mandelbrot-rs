@@ -50,9 +50,15 @@ const Index = () => {
     }
     loadingRef.current = true;
     const before = performance.now();
+    console.time("mandelbrot calculation");
     const bytes = module.mandelbrot(width, height, iterations);
+    console.timeEnd("mandelbrot calculation");
+    console.time("new Blob()");
     const blob = new Blob([bytes], { type: "image/bmp" });
+    console.timeEnd("new Blob()");
+    console.time("URL.createObjectUrl");
     const imageObj = URL.createObjectURL(blob);
+    console.timeEnd("URL.createObjectUrl");
     setImgSrc(imageObj);
     if (imageObjRef.current != null) {
       URL.revokeObjectURL(imageObjRef.current);
