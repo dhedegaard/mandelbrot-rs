@@ -1,19 +1,19 @@
 import { AppProps } from "next/dist/shared/lib/router/router";
 import Head from "next/head";
-import { createGlobalStyle } from "styled-components";
-
-const GlobalStyle = createGlobalStyle`
-body {
-  margin: 0;
-  overflow: hidden;
-  background-color: #000;
-}
-`;
+import { Global } from "@emotion/react";
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
     <>
-      <GlobalStyle />
+      <Global
+        styles={`
+          body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #000;
+          }
+        `}
+      />
       <Head>
         <meta charSet="utf-8" />
         <meta
