@@ -71,7 +71,7 @@ const Index = () => {
   }, [module, width, height, iterations, generateImage]);
 
   const decrementIterations = useCallback(
-    () => setIterations((old) => Math.max(0, old < 10 ? old - 1 : old - 10)),
+    () => setIterations((old) => Math.max(0, old <= 10 ? old - 1 : old - 10)),
     []
   );
   const incrementIterations = useCallback(
