@@ -68,7 +68,7 @@ const Index = () => {
       return;
     }
     generateImage();
-  }, [module, width, height, iterations]);
+  }, [module, width, height, iterations, generateImage]);
 
   const decrementIterations = useCallback(
     () => setIterations((old) => Math.max(0, old < 10 ? old - 1 : old - 10)),
